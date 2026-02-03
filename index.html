@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoMineX - Mine Bitcoin, Earn Real Money</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0A0E27;
+            --bg-secondary: #1A1F3A;
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.85);
+            --text-muted: #8B92B0;
+            --border-subtle: rgba(138, 98, 255, 0.3);
+            --brand-primary: #00D9FF;
+            --brand-secondary: #FF006B;
+            --brand-accent: #FFD700;
+            --brand-purple: #8A62FF;
+        }
+
+        body {
+            font-family: 'Arial', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0A0E27 0%, #1e0a3c 25%, #2d1b4e 50%, #1e0a3c 75%, #0A0E27 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Header */
+        header {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 16px 7.6923%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 80px;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(138, 98, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--brand-primary);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 28px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease-in-out;
+            box-shadow: 0 4px 20px rgba(0, 217, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(0, 217, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(138, 98, 255, 0.2);
+            color: #FFFFFF;
+            border: 2px solid var(--brand-purple);
+            border-radius: 8px;
+            padding: 12px 28px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .btn-secondary:hover {
+            background: var(--brand-purple);
+            transform: translateY(-2px);
+        }
+
+        /* Modal/Popup System */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: linear-gradient(135deg, #1A1F3A 0%, #2d1b4e 100%);
+            border: 2px solid var(--brand-purple);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(138, 98, 255, 0.4);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(10, 14, 39, 0.6);
+            border: 2px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .page-section {
+            padding: 100px 7.6923%;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 60px;
+            padding: 100px 7.6923%;
+        }
+
+        .hero-text {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .display-huge {
+            font-size: 66px;
+            font-weight: 600;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .accent-text {
+            color: var(--brand-primary);
+        }
+
+        .body-large {
+            font-size: 20px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .stat-card {
+            background: rgba(26, 31, 58, 0.8);
+            border: 2px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--brand-primary);
+            box-shadow: 0 8px 30px rgba(0, 217, 255, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--brand-primary);
+        }
+
+        /* 3D Mining Container */
+        .mining-3d-container {
+            width: 100%;
+            height: 600px;
+            background: rgba(10, 14, 39, 0.6);
+            border: 2px solid var(--brand-purple);
+            border-radius: 16px;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mining-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 16px;
+            z-index: 10;
+        }
+
+        /* Custom Select Dropdown */
+        .custom-select {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-header {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(10, 14, 39, 0.6);
+            border: 2px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .select-header:hover {
+            border-color: var(--brand-primary);
+        }
+
+        .select-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 8px;
+            background: rgba(26, 31, 58, 0.98);
+            border: 2px solid var(--brand-purple);
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(138, 98, 255, 0.4);
+        }
+
+        .select-options.active {
+            display: block;
+        }
+
+        .select-option {
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .select-option:hover {
+            background: rgba(138, 98, 255, 0.2);
+            color: var(--brand-primary);
+        }
+
+        .select-option:last-child {
+            border-bottom: none;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--brand-primary);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mining Status Indicator */
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #666;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .status-dot.active {
+            background: #00FF00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .display-huge {
+                font-size: 42px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="#" class="logo" onclick="showPage('home')">CryptoMineX</a>
+        <nav id="mainNav">
+            <a id="nav-home" onclick="showPage('home')">Home</a>
+            <a id="nav-features" onclick="showPage('features')">Features</a>
+            <a id="nav-tiers" onclick="showPage('tiers')">Tiers</a>
+            <a id="nav-dashboard" onclick="showPage('dashboard')">Dashboard</a>
+        </nav>
+        <div id="authButtons">
+            <button class="btn-primary" onclick="showLoginModal()" id="loginBtn">Login</button>
+            <button class="btn-secondary hidden" onclick="logout()" id="logoutBtn">Logout</button>
+        </div>
+    </header>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <h2 class="modal-header">Login to CryptoMineX</h2>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-input" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="loginPassword" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-secondary" onclick="closeModal('loginModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile Completion Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal">
+            <h2 class="modal-header">Complete Your Profile</h2>
+            <p class="body-large" style="margin-bottom: 24px;">Please add your contact information to continue.</p>
+            <form onsubmit="handleProfileComplete(event)">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" id="profileEmail" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" class="form-input" id="profilePhone" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-primary" style="width: 100%;">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Withdrawal Modal -->
+    <div class="modal-overlay" id="withdrawModal">
+        <div class="modal">
+            <h2 class="modal-header">Withdraw Bitcoin</h2>
+            <form onsubmit="handleWithdrawal(event)">
+                <div class="form-group">
+                    <label class="form-label">Withdrawal Platform</label>
+                    <div class="custom-select" id="walletTypeSelect">
+                        <div class="select-header" onclick="toggleSelect('walletTypeSelect')">
+                            <span id="selectedWalletType">Select Platform</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="select-options">
+                            <div class="select-option" onclick="selectWalletType('coinbase', '💰 Coinbase (Instant)')">💰 Coinbase (Instant)</div>
+                            <div class="select-option" onclick="selectWalletType('cashapp', '💸 Cash App (Instant)')">💸 Cash App (Instant)</div>
+                            <div class="select-option" onclick="selectWalletType('binance', '🔶 Binance (Instant)')">🔶 Binance (Instant)</div>
+                            <div class="select-option" onclick="selectWalletType('bitcoin', '₿ Bitcoin Wallet')">₿ Bitcoin Wallet</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Wallet Address/Email/Cashtag</label>
+                    <input type="text" class="form-input" id="walletAddress" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Amount (USD) - Min $10</label>
+                    <input type="number" class="form-input" id="withdrawAmount" min="10" step="0.01" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-secondary" onclick="closeModal('withdrawModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Withdraw</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Shop Modal -->
+    <div class="modal-overlay" id="shopModal">
+        <div class="modal">
+            <h2 class="modal-header">Coin Shop</h2>
+            <div class="form-group">
+                <div class="select-option" onclick="buyItem('coins_1k', 500)">
+                    🪙 1,000 Coins - <strong>500 coins</strong>
+                </div>
+                <div class="select-option" onclick="buyItem('coins_5k', 2000)">
+                    💰 5,000 Coins - <strong>2,000 coins</strong>
+                </div>
+                <div class="select-option" onclick="buyItem('coins_10k', 3500)">
+                    💎 10,000 Coins - <strong>3,500 coins</strong>
+                </div>
+                <div class="select-option" onclick="buyItem('golden_pickaxe', 15000)">
+                    ⛏️ Golden Pickaxe (2x, 1h) - <strong>15,000 coins</strong>
+                </div>
+                <div class="select-option" onclick="buyItem('diamond_drill', 30000)">
+                    💎 Diamond Drill (3x, 30m) - <strong>30,000 coins</strong>
+                </div>
+                <div class="select-option" onclick="buyItem('turbo_engine', 50000)">
+                    🚀 Turbo Engine (5x, 15m) - <strong>50,000 coins</strong>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="btn-secondary" onclick="closeModal('shopModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Page -->
+        <div id="page-home" class="page">
+            <section class="hero-section">
+                <div class="hero-text">
+                    <h1 class="display-huge">Mine Bitcoin. <span class="accent-text">Earn Real Money.</span></h1>
+                    <p class="body-large">Join thousands earning up to $350/day with our cloud mining platform. No hardware required.</p>
+                    <div class="cta-buttons">
+                        <button class="btn-primary" onclick="showLoginModal()">Start Mining Free</button>
+                        <a href="https://discord.gg/UZARDV77vN" target="_blank" class="btn-secondary">Join Discord</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Features Page -->
+        <div id="page-features" class="page hidden">
+            <section class="page-section">
+                <h2 class="display-huge" style="text-align: center; margin-bottom: 60px;">Platform Features</h2>
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <h3 style="font-size: 24px; margin-bottom: 16px;">💰 Real Earnings</h3>
+                        <p class="body-large">Earn $1-$350 daily based on your tier. Withdraw to any Bitcoin wallet.</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 style="font-size: 24px; margin-bottom: 16px;">⚡ Boosted Mining</h3>
+                        <p class="body-large">Regular users: 1x-5x boost. Premium users: 5x-10x boost.</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 style="font-size: 24px; margin-bottom: 16px;">🎮 Fun & Rewarding</h3>
+                        <p class="body-large">1000+ achievements to unlock. Daily, weekly, monthly tasks.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Tiers Page -->
+        <div id="page-tiers" class="page hidden">
+            <section class="page-section">
+                <h2 class="display-huge" style="text-align: center; margin-bottom: 60px;">Mining Tiers</h2>
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <h3 style="font-size: 28px; margin-bottom: 16px;">Regular Tier</h3>
+                        <p style="font-size: 48px; color: var(--brand-accent); font-weight: 700;">FREE</p>
+                        <ul style="margin-top: 24px; list-style: none;">
+                            <li>✓ 1,000-2,500 starting coins</li>
+                            <li>✓ 1x-5x boost</li>
+                            <li>✓ $150/day max</li>
+                            <li>✓ 1 mine per day</li>
+                        </ul>
+                    </div>
+                    <div class="stat-card" style="border-color: var(--brand-accent);">
+                        <h3 style="font-size: 28px; margin-bottom: 16px;">Premium Tier</h3>
+                        <p style="font-size: 48px; color: var(--brand-accent); font-weight: 700;">5,000 Coins</p>
+                        <ul style="margin-top: 24px; list-style: none;">
+                            <li>✓ 25,000 starting coins</li>
+                            <li>✓ 5x-10x boost</li>
+                            <li>✓ $350/day max</li>
+                            <li>✓ 6 mines per day</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="page-dashboard" class="page hidden">
+            <section class="page-section">
+                <h2 class="display-huge">Welcome, <span id="userName">User</span></h2>
+                
+                <!-- 3D Mining Visualization -->
+                <div class="mining-3d-container">
+                    <canvas id="miningCanvas" style="width: 100%; height: 100%;"></canvas>
+                    <div class="mining-controls">
+                        <button class="btn-primary" onclick="startMining()" id="startMineBtn">Start Mining</button>
+                        <button class="btn-secondary" onclick="stopMining()" id="stopMineBtn">Stop Mining</button>
+                        <button class="btn-secondary" onclick="showModal('withdrawModal')">Withdraw</button>
+                        <button class="btn-secondary" onclick="showModal('shopModal')">Shop</button>
+                    </div>
+                </div>
+
+                <!-- Mining Status -->
+                <div class="dashboard-grid" style="margin-top: 40px;">
+                    <div class="stat-card">
+                        <div class="stat-label">Mining Status</div>
+                        <div class="stat-value"><span class="status-dot" id="miningStatusDot"></span><span id="miningStatus">Inactive</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Current Boost</div>
+                        <div class="stat-value" id="currentBoost">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Coins Remaining</div>
+                        <div class="stat-value" id="coinsRemaining">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Hash Rate</div>
+                        <div class="stat-value" id="hashRate">- TH/s</div>
+                    </div>
+                </div>
+
+                <!-- Earnings -->
+                <h3 style="font-size: 32px; margin-top: 60px; margin-bottom: 24px;">Your Earnings</h3>
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Today's Earnings</div>
+                        <div class="stat-value" id="todayEarnings">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Lifetime Earnings</div>
+                        <div class="stat-value" id="lifetimeEarnings">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">BTC Balance</div>
+                        <div class="stat-value" id="btcBalance">0.00000000 BTC</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Coin Balance</div>
+                        <div class="stat-value" id="coinBalance">0</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = 'https://api.cryptominex.online';
+        let selectedWallet = null;
+        let userData = null;
+        let miningInterval = null;
+
+        // Modal Functions
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function showLoginModal() {
+            showModal('loginModal');
+        }
+
+        // Custom Select Functions
+        function toggleSelect(selectId) {
+            const select = document.getElementById(selectId);
+            const options = select.querySelector('.select-options');
+            options.classList.toggle('active');
+        }
+
+        function selectWalletType(value, label) {
+            selectedWallet = value;
+            document.getElementById('selectedWalletType').textContent = label;
+            document.getElementById('walletTypeSelect').querySelector('.select-options').classList.remove('active');
+        }
+
+        // Close selects when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.custom-select')) {
+                document.querySelectorAll('.select-options').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+            }
+        });
+
+        // Login Handler
+        async function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${API_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    userData = data;
+                    localStorage.setItem('cryptominex_user', JSON.stringify(data));
+                    
+                    closeModal('loginModal');
+                    
+                    // Check if profile needs completion
+                    if (!data.email || !data.phone) {
+                        showModal('profileModal');
+                    } else {
+                        showPage('dashboard');
+                        updateUIAfterLogin();
+                    }
+                } else {
+                    alert('Login failed. Please check your credentials.');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Login failed. Please try again.');
+            }
+        }
+
+        // Profile Completion Handler
+        async function handleProfileComplete(event) {
+            event.preventDefault();
+            const email = document.getElementById('profileEmail').value;
+            const phone = document.getElementById('profilePhone').value;
+
+            try {
+                const response = await fetch(`${API_URL}/api/auth/update-profile`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        userId: userData.userId,
+                        email, 
+                        phone 
+                    })
+                });
+
+                if (response.ok) {
+                    userData.email = email;
+                    userData.phone = phone;
+                    localStorage.setItem('cryptominex_user', JSON.stringify(userData));
+                    closeModal('profileModal');
+                    showPage('dashboard');
+                    updateUIAfterLogin();
+                } else {
+                    alert('Failed to update profile. Please try again.');
+                }
+            } catch (error) {
+                console.error('Profile update error:', error);
+                alert('Failed to update profile. Please try again.');
+            }
+        }
+
+        // Withdrawal Handler
+        async function handleWithdrawal(event) {
+            event.preventDefault();
+            
+            if (!selectedWallet) {
+                alert('Please select a withdrawal platform');
+                return;
+            }
+
+            const walletAddress = document.getElementById('walletAddress').value;
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+
+            try {
+                const response = await fetch(`${API_URL}/api/wallet/withdraw`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        userId: userData.userId,
+                        walletType: selectedWallet,
+                        walletAddress,
+                        amount
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(`Withdrawal submitted! TX ID: ${data.txId}\nProcessing time: ${data.processingTime}`);
+                    closeModal('withdrawModal');
+                    loadDashboardData();
+                } else {
+                    const error = await response.json();
+                    alert(`Withdrawal failed: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('Withdrawal error:', error);
+                alert('Withdrawal failed. Please try again.');
+            }
+        }
+
+        // Shop Handler
+        async function buyItem(itemId, cost) {
+            if (!confirm(`Purchase this item for ${cost} coins?`)) return;
+
+            try {
+                const response = await fetch(`${API_URL}/api/shop/buy`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        userId: userData.userId,
+                        itemId,
+                        cost
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(`Purchase successful! Remaining coins: ${data.remainingCoins}`);
+                    loadDashboardData();
+                } else {
+                    const error = await response.json();
+                    alert(`Purchase failed: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('Shop error:', error);
+                alert('Purchase failed. Please try again.');
+            }
+        }
+
+        // Mining Functions
+        async function startMining() {
+            try {
+                const response = await fetch(`${API_URL}/api/mine/start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: userData.userId })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    updateMiningStatus(data);
+                    startMiningAnimation();
+                } else {
+                    const error = await response.json();
+                    alert(`Failed to start mining: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('Start mining error:', error);
+                alert('Failed to start mining. Please try again.');
+            }
+        }
+
+        async function stopMining() {
+            try {
+                const response = await fetch(`${API_URL}/api/mine/stop`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: userData.userId })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(`Mining stopped! Earned: $${data.earnedUSD}`);
+                    loadDashboardData();
+                    stopMiningAnimation();
+                } else {
+                    const error = await response.json();
+                    alert(`Failed to stop mining: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('Stop mining error:', error);
+                alert('Failed to stop mining. Please try again.');
+            }
+        }
+
+        function updateMiningStatus(data) {
+            document.getElementById('miningStatusDot').classList.add('active');
+            document.getElementById('miningStatus').textContent = 'Active';
+            document.getElementById('currentBoost').textContent = `${data.totalBoost}x`;
+            document.getElementById('coinsRemaining').textContent = data.remainingCoins.toLocaleString();
+            document.getElementById('hashRate').textContent = `${data.hashRate} TH/s`;
+        }
+
+        // 3D Mining Animation
+        let animationFrame = null;
+        let particles = [];
+
+        function startMiningAnimation() {
+            const canvas = document.getElementById('miningCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            // Create particles
+            for (let i = 0; i < 50; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2,
+                    size: Math.random() * 3 + 1
+                });
+            }
+
+            function animate() {
+                ctx.fillStyle = 'rgba(10, 14, 39, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = '#00D9FF';
+                    ctx.fill();
+
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                });
+
+                animationFrame = requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        function stopMiningAnimation() {
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+                animationFrame = null;
+            }
+            particles = [];
+            const canvas = document.getElementById('miningCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Dashboard Data Loading
+        async function loadDashboardData() {
+            if (!userData) return;
+
+            try {
+                const response = await fetch(`${API_URL}/api/mine/status?userId=${userData.userId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    updateDashboardUI(data);
+                }
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        function updateDashboardUI(data) {
+            if (data.active) {
+                document.getElementById('miningStatusDot').classList.add('active');
+                document.getElementById('miningStatus').textContent = 'Active';
+                document.getElementById('hashRate').textContent = `${data.hashRate} TH/s`;
+            } else {
+                document.getElementById('miningStatusDot').classList.remove('active');
+                document.getElementById('miningStatus').textContent = 'Inactive';
+                document.getElementById('hashRate').textContent = '- TH/s';
+            }
+
+            document.getElementById('currentBoost').textContent = data.totalBoost ? `${data.totalBoost}x` : '-';
+            document.getElementById('coinsRemaining').textContent = data.coins ? data.coins.toLocaleString() : '-';
+            document.getElementById('todayEarnings').textContent = data.todayEarnings ? `$${data.todayEarnings.toFixed(2)}` : '$0.00';
+            document.getElementById('lifetimeEarnings').textContent = data.totalBTCEarned ? `$${data.totalBTCEarned.toFixed(2)}` : '$0.00';
+            document.getElementById('btcBalance').textContent = data.totalBTCEarned ? `${(data.totalBTCEarned / 45000).toFixed(8)} BTC` : '0.00000000 BTC';
+            document.getElementById('coinBalance').textContent = data.coins ? data.coins.toLocaleString() : '0';
+        }
+
+        function updateUIAfterLogin() {
+            document.getElementById('loginBtn').classList.add('hidden');
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            document.getElementById('userName').textContent = userData.username || 'User';
+            loadDashboardData();
+            
+            // Auto-refresh dashboard every 30 seconds
+            setInterval(loadDashboardData, 30000);
+        }
+
+        function logout() {
+            localStorage.removeItem('cryptominex_user');
+            userData = null;
+            document.getElementById('loginBtn').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
+            showPage('home');
+        }
+
+        function showPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+
+            // Remove active class from nav links
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show selected page
+            document.getElementById('page-' + pageName).classList.remove('hidden');
+
+            // Add active class
+            const navLink = document.getElementById('nav-' + pageName);
+            if (navLink) navLink.classList.add('active');
+
+            // Load dashboard if needed
+            if (pageName === 'dashboard' && userData) {
+                loadDashboardData();
+            }
+
+            window.scrollTo(0, 0);
+        }
+
+        // Check for existing session on load
+        window.addEventListener('DOMContentLoaded', function() {
+            const saved = localStorage.getItem('cryptominex_user');
+            if (saved) {
+                userData = JSON.parse(saved);
+                updateUIAfterLogin();
+            }
+
+            // Show home page
+            showPage('home');
+        });
+    </script>
+</body>
+</html>
